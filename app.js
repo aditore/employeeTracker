@@ -42,13 +42,13 @@ function startApp() {
     }]).then((val) => {
         switch(val.startChoice) {
             case 'View all departments':
-                //function
+                viewAllDepartments();
             break;
             case 'View all roles':
-                //function
+                viewAllRoles();
             break;
             case 'View all employees':
-                //function
+                viewAllEmployees();
             break;
             case 'Add a department':
                 //function
@@ -64,4 +64,63 @@ function startApp() {
             break;        
         }      
     })
+}
+
+//view all
+//departments
+function viewAllDepartments() {
+    connection.query(`SELECT department.id AS departmentId, 
+                        department.name AS departmentName
+                        FROM department 
+                        ORDER BY department.id;`,
+    (err, res) => {
+        if(err) {
+            throw err
+        }
+        console.table(res);
+        startApp();
+    });
+}
+
+//roles
+function viewAllRoles() {
+    connection.query(`SELECT role.id AS roleId,
+                        role.title AS roleTitle, 
+                        role.salary,
+                        department.name AS department 
+                        FROM role
+                        INNER JOIN department ON
+                        role.departmentId=department.id
+                        ORDER BY role.id;`,
+    (err, res) => {
+        if(err) {
+            throw err
+        }
+        console.table(res);
+        startApp();
+    });
+}
+
+function viewAllEmployees() {
+    connection.query(`SELECT employee.id AS employeeId,
+                        employee.firstName AS firstName,
+                        employee.lastName AS lastName,
+                        role.salary AS salary,
+                        role.title AS jobTitle,
+                        department.name AS department,
+                        CONCAT(e.firstName, ' ', e.lastName) AS manager
+                        FROM employee
+                        INNER JOIN role ON
+                        role.id=employee.roleId
+                        INNER JOIN department ON
+                        role.departmentId=department.id
+                        LEFT JOIN employee e ON
+                        employee.managerId=e.id;`,
+    (err, res) => {
+        if(err) {
+            throw err
+        }
+        console.table(res);
+        startApp();
+    });
 }
