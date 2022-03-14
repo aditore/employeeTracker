@@ -51,10 +51,10 @@ function startApp() {
                 viewAllEmployees();
             break;
             case 'Add a department':
-                //function
+                addDepartment();
             break;
             case 'Add a role':
-                //function
+                addRole();
             break;
             case 'Add an employee':
                 //function
@@ -101,6 +101,7 @@ function viewAllRoles() {
     });
 }
 
+//employees
 function viewAllEmployees() {
     connection.query(`SELECT employee.id AS employeeId,
                         employee.firstName AS firstName,
@@ -122,5 +123,76 @@ function viewAllEmployees() {
         }
         console.table(res);
         startApp();
+    });
+}
+
+//add
+//department
+function addDepartment() {
+    inquirer.prompt([{
+        name: 'name',
+        type: 'input',
+        message: 'Type the name of the new Department'
+    }]).then((res) => {
+        connection.query(
+            'INSERT INTO department SET ?',
+            {
+                name: res.name
+            },
+            (err) => {
+                if(err) {
+                    throw err
+                }
+                console.log('Department has been added');
+                console.table(res);
+                startApp();
+            }
+        );
+    });
+}
+
+//add role
+function addRole() {
+    inquirer.prompt([
+        {
+            name: 'title',
+            type: 'input',
+            message: 'Type in the title of the new role'
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'Type the salary of the role using only numbers',
+            validate: (name) => {
+                if(isNaN(name)) {
+                    console.log('Please input a number with no punctuation or letters');
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'departmentId',
+            message: 'Please type the department id number'
+        }
+    ]).then((res) => {
+        connection.query(
+            'INSERT INTO role SET ?',
+            {
+                title: res.title,
+                salary: res.salary,
+                departmentId: res.departmentId
+            },
+            (err) => {
+                if(err) {
+                    throw err;
+                }
+                console.log('Role has been added')
+                console.table(res);
+                startApp();
+            }
+        );
     });
 }
