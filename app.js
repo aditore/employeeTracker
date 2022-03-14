@@ -60,7 +60,7 @@ function startApp() {
                 addEmployee();
             break;
             case 'Update an employee role':
-                //function
+                updateEmployee();
             break;        
         }      
     })
@@ -198,7 +198,7 @@ function addRole() {
 }
 
 //add employee
-//set functions to select from a seperate database
+//set functions to select choices from databases
 let roles = []
 function roleChoice() {
     connection.query('SELECT * FROM role', (err, res) => {
@@ -259,13 +259,61 @@ function addEmployee() {
             lastName: val.lastName,
             roleId: roleId,
             managerId: managerId
-        }, (err) => {
+        }, 
+        (err) => {
             if(err) {
                 throw err;
             }
             console.log('Added Employee');
             console.table(val);
             startApp();
+        });
+    });
+}
+
+//update employee
+function updateEmployee() {
+    connection.query('SELECT employee.id, employee.firstName, employee.lastName, role.title FROM employee JOIN role ON employee.roleId = role.id', (err, res) => {
+        if(err) {
+            throw err;
+        }
+        console.table(res);
+        inquirer.prompt([
+            {
+                name: 'idChoice',
+                type: 'list',
+                message: 'Select the employee you wish to update',
+                choices: () => {
+                    let id = [];
+                    for(let i = 0; i < res.length; i++) {
+                        id.push(res[i].id);
+                    }
+                    return id;
+                }
+            },
+            {
+                name: 'role',
+                type: 'list',
+                message: 'Select updated employee role',
+                choices: roleChoice()
+            }
+        ]).then((val) => {
+            let updatedRole = roleChoice().indexOf(val.role) + 1;
+            connection.query(`UPDATE employee SET ? WHERE roleId = ?`,
+            [{
+                id: val.idChoice
+            },
+            {
+                roleId: updatedRole
+            }],
+            (err) => {
+                if(err) {
+                    throw err;
+                }
+                console.log('Updated employee');
+                console.table(val);
+                startApp();
+            });
         });
     });
 }
