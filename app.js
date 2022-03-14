@@ -57,7 +57,7 @@ function startApp() {
                 addRole();
             break;
             case 'Add an employee':
-                //function
+                addEmployee();
             break;
             case 'Update an employee role':
                 //function
@@ -194,5 +194,78 @@ function addRole() {
                 startApp();
             }
         );
+    });
+}
+
+//add employee
+//set functions to select from a seperate database
+let roles = []
+function roleChoice() {
+    connection.query('SELECT * FROM role', (err, res) => {
+        if(err) {
+            throw err;
+        }
+        for(let i = 0; i < res.length; i++) {
+            roles.push(res[i].title);
+        }
+    });
+    return roles;
+}
+
+let managers = []
+function managerChoice() {
+    connection.query('SELECT firstName, lastName FROM employee WHERE managerId IS NULL', (err, res) => {
+        if(err) {
+            throw err;
+        }
+        for(let i = 0; i < res.length; i++) {
+            managers.push(`${res[i].firstName} ${res[i].lastName}`);
+        }
+    });
+    return managers;
+}
+
+//use functions to add employees
+function addEmployee() {
+    inquirer.prompt([
+        {
+            name: 'firstName',
+            type: 'input',
+            message: 'Input employee first name'
+        },
+        {
+            name: 'lastName',
+            type: 'input',
+            message: 'Input employee last name'
+        },
+        {
+            name: 'role',
+            type: 'list',
+            message: 'Select employee role',
+            choices: roleChoice()
+        },
+        {
+            name: 'manager',
+            type: 'list',
+            message: 'Select employee manager',
+            choices: managerChoice()
+        }
+    ]).then((val) => {
+        let roleId = roleChoice().indexOf(val.role) + 1;
+        let managerId = managerChoice().indexOf(val.manager) + 1;
+        connection.query('INSERT INTO employee SET ?',
+        {
+            firstName: val.firstName,
+            lastName: val.lastName,
+            roleId: roleId,
+            managerId: managerId
+        }, (err) => {
+            if(err) {
+                throw err;
+            }
+            console.log('Added Employee');
+            console.table(val);
+            startApp();
+        });
     });
 }
