@@ -37,7 +37,8 @@ function startApp() {
             'Add a department',
             'Add a role',
             'Add an employee',
-            'Update an employee role'   
+            'Update an employee role',
+            'All done'   
         ]
     }]).then((val) => {
         switch(val.startChoice) {
@@ -61,6 +62,9 @@ function startApp() {
             break;
             case 'Update an employee role':
                 updateEmployee();
+            break;
+            case 'All done':
+                finished();
             break;        
         }      
     })
@@ -344,4 +348,10 @@ function updateEmployee() {
         });
     });
     
+}
+
+//stop running
+function finished() {
+    console.log('Please remember to brush your teeth before going to bed, have a nice day!');
+    connection.end();
 }
