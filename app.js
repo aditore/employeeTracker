@@ -214,7 +214,10 @@ function roleChoice() {
 
 let managers = []
 function managerChoice() {
-    connection.query('SELECT firstName, lastName FROM employee WHERE managerId IS NULL', (err, res) => {
+    connection.query(`SELECT firstName, lastName 
+                        FROM employee WHERE 
+                        managerId IS NULL`, 
+    (err, res) => {
         if(err) {
             throw err;
         }
@@ -273,7 +276,11 @@ function addEmployee() {
 
 //update employee
 function updateEmployee() {
-    connection.query('SELECT employee.id, employee.firstName, employee.lastName, role.title FROM employee JOIN role ON employee.roleId = role.id', (err, res) => {
+    connection.query(`SELECT employee.id, employee.firstName, employee.lastName, role.title 
+                        FROM employee 
+                        JOIN role ON 
+                        employee.roleId = role.id`, 
+    (err, res) => {
         if(err) {
             throw err;
         }
