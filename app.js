@@ -275,50 +275,73 @@ function addEmployee() {
 }
 
 //update employee
-function updateEmployee() {
-    connection.query(`SELECT employee.id, employee.firstName, employee.lastName, role.title 
-                        FROM employee 
-                        JOIN role ON 
-                        employee.roleId = role.id`, 
+//set function to pull from employee database
+let employees = []
+function listEmployee() {
+    connection.query(`SELECT id, firstName, lastName
+                        FROM employee;`,
     (err, res) => {
         if(err) {
             throw err;
         }
+        for(let i = 0; i < res.length; i++) {
+            employees.push(`${res[i].id}`);
+        }
+    })
+    return employees;
+}
+listEmployee();
+function updateEmployee() {
+    //view id of employee to confirm
+    connection.query(`SELECT employee.id AS employeeId,
+                        employee.firstName AS firstName,
+                        employee.lastName AS lastName,
+                        role.salary AS salary,
+                        role.title AS jobTitle,
+                        department.name AS department,
+                        CONCAT(e.firstName, ' ', e.lastName) AS manager
+                        FROM employee
+                        INNER JOIN role ON
+                        role.id=employee.roleId
+                        INNER JOIN department ON
+                        role.departmentId=department.id
+                        LEFT JOIN employee e ON
+                        employee.managerId=e.id;`,
+    (err, res) => {
+        if(err) {
+            throw err
+        }
         console.table(res);
-        inquirer.prompt([
-            {
-                name: 'idChoice',
-                type: 'list',
-                message: 'Select the employee you wish to update',
-                choices: () => {
-                    let id = [];
-                    for(let i = 0; i < res.length; i++) {
-                        id.push(res[i].id);
-                    }
-                    return id;
-                }
-            },
-            {
-                name: 'role',
-                type: 'list',
-                message: 'Select updated employee role',
-                choices: roleChoice()
+    });
+    //then choose id number to update
+    inquirer.prompt([
+        {
+            name: 'employeeChoice',
+            type: 'list',
+            message: 'Select the employee you wish to update',
+            choices: employees 
+        },
+        {
+            name: 'role',
+            type: 'list',
+            message: 'Select updated employee role',
+            choices: roleChoice()
+        }
+    ]).then((val) => {
+        let updatedRole = roleChoice().indexOf(val.role) + 1;
+        connection.query(`UPDATE employee SET roleId = ? WHERE id = ?`,
+        [
+            updatedRole,
+            val.employeeChoice  
+        ],
+        (err) => {
+            if(err) {
+                throw err;
             }
-        ]).then((val) => {
-            let updatedRole = roleChoice().indexOf(val.role) + 1;
-            connection.query(`UPDATE employee SET roleId = ? WHERE id = ?`,
-            [
-                updatedRole,
-                val.idChoice  
-            ],
-            (err) => {
-                if(err) {
-                    throw err;
-                }
-                console.log('Updated employee');
-                console.table(val);
-                startApp();
-            });
+            console.log('Updated employee');
+            console.table(val);
+            startApp();
         });
     });
+    
 }
