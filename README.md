@@ -8,20 +8,20 @@ I learned a lot about how to control what happens in a database from this projec
 
 ## Table of Contents
 
--[Description](#description)
--[Installation](#installation)
--[Usage](#usage)
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
 
 ## Installation
 
-Requires npm
+Requires npm  
 * console.table
 * dotenv
 * inquirer
 * mysql2
 
-- Requires the database MySQL
-- Requires a created database with tables that include (department, role and employee)
+Requires the database MySQL  
+Requires a created database with tables that include (department, role and employee)
 
 ## Usage
 
