@@ -299,13 +299,11 @@ function updateEmployee() {
             }
         ]).then((val) => {
             let updatedRole = roleChoice().indexOf(val.role) + 1;
-            connection.query(`UPDATE employee SET ? WHERE roleId = ?`,
-            [{
-                id: val.idChoice
-            },
-            {
-                roleId: updatedRole
-            }],
+            connection.query(`UPDATE employee SET roleId = ? WHERE id = ?`,
+            [
+                updatedRole,
+                val.idChoice  
+            ],
             (err) => {
                 if(err) {
                     throw err;
