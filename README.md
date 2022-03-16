@@ -27,7 +27,7 @@ Requires a created database with tables that include (department, role and emplo
 
 Click the image to go to a video of the app
 
-[![linkToVideoComingSoon!]()]
+[![picture of app](./images/employeeTracker.png)](https://drive.google.com/file/d/1kebIt7MP7oZoFhXJotVkamCW7Djgexqq/view)]
 
 ```md
 GIVEN a command-line application that accepts user input
