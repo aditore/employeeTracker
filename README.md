@@ -2,7 +2,7 @@
 
 ## Description
 
-The employeeTracker is an app that can update a database of employees to help improve the orginization of a companies work force. The motivation behind this was to learn more about how to utilize MySQL.
+The employeeTracker is an app that can update a database of employees to help improve the organization of a companies work force. The motivation behind this was to learn more about how to utilize MySQL.
 
 I learned a lot about how to control what happens in a database from this project and will use what I learned to delve even deeper on the back-end side of coding.
 
@@ -27,7 +27,7 @@ Requires a created database with tables that include (department, role and emplo
 
 Click the image to go to a video of the app
 
-[![picture of app](./images/employeeTracker.png)](https://drive.google.com/file/d/1kebIt7MP7oZoFhXJotVkamCW7Djgexqq/view)]
+[![picture of app](./images/employeeTracker.png)](https://drive.google.com/file/d/1kebIt7MP7oZoFhXJotVkamCW7Djgexqq/view)
 
 ```md
 GIVEN a command-line application that accepts user input
